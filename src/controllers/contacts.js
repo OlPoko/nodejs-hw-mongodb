@@ -9,6 +9,7 @@ import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import mongoose from 'mongoose';
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -51,6 +52,14 @@ export const getContactByIdController = async (req, res, next) => {
 
 export const createContactController = async (req, res, next) => {
   try {
+    const { name, phoneNumber, contactType } = req.body;
+    if (!name || !phoneNumber || !contactType) {
+      throw createHttpError(
+        400,
+        'Missing required fields: name, phoneNumber, or contactType',
+      );
+    }
+
     const contact = await createContact(req.body);
     res.status(201).json({
       status: 201,
@@ -65,10 +74,15 @@ export const createContactController = async (req, res, next) => {
 export const deleteContactController = async (req, res, next) => {
   try {
     const { contactId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(contactId)) {
+      throw createHttpError(400, 'Invalid contact ID');
+    }
+
     const contact = await deleteContact(contactId);
 
     if (!contact) {
-      return next(createHttpError(404, 'Contact not found'));
+      throw createHttpError(404, 'Contact not found');
     }
 
     res.status(204).send();
@@ -80,6 +94,11 @@ export const deleteContactController = async (req, res, next) => {
 export const patchContactController = async (req, res, next) => {
   try {
     const { contactId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(contactId)) {
+      throw createHttpError(400, 'Invalid contact ID');
+    }
+
     const updatedContact = await updateContact(contactId, req.body);
 
     if (!updatedContact) {
