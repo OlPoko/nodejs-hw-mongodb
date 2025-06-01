@@ -10,7 +10,18 @@ import {
 import { validateBody } from '../middlewares /validateBody.js';
 import { requestResetEmailSchema } from '../validation/auth.js';
 import { requestResetEmailController } from '../controllers/auth.js';
-
+import { resetPasswordSchema } from '../validation/auth.js';
+import { resetPasswordController } from '../controllers/auth.js';
+import { upload } from '../middlewares /multer.js';
+import {
+  createContactController,
+  patchContactController,
+} from '../controllers/contacts.js';
+import {
+  createContactSchema,
+  updateContactSchema,
+} from '../validation/contact.js';
+import { isValidId } from '../middlewares /isValidId.js';
 const router = Router();
 
 router.post(
@@ -30,5 +41,24 @@ router.post(
   validateBody(requestResetEmailSchema),
   ctrlWrapper(requestResetEmailController),
 );
+router.post(
+  '/reset-password',
+  validateBody(resetPasswordSchema),
+  ctrlWrapper(resetPasswordController),
+);
 
+router.post(
+  '/',
+  upload.single('photo'),
+  validateBody(createContactSchema),
+  ctrlWrapper(createContactController),
+);
+
+router.patch(
+  '/:contactId',
+  isValidId,
+  upload.single('photo'),
+  validateBody(updateContactSchema),
+  ctrlWrapper(patchContactController),
+);
 export default router;
