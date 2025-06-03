@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
-import { validateBody } from '../middlewares /validateBody.js';
-import { isValidId } from '../middlewares /isValidId.js';
+import { validateBody } from '../middlewares/validateBody.js';
+import { isValidId } from '../middlewares/isValidId.js';
 import {
   createContactSchema,
   updateContactSchema,
@@ -14,7 +14,7 @@ import {
   patchContactController,
 } from '../controllers/contacts.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import { authenticate } from '../middlewares /authenticate.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
@@ -34,13 +34,23 @@ router.post(
 router.delete('/:contactId', isValidId, ctrlWrapper(deleteContactController));
 router.patch(
   '/:contactId',
-  (req, res, next) => {
-    console.log('PARAMS:', req.params);
-    next();
-  },
   isValidId,
   upload.single('photo'),
-  validateBody(updateContactSchema),
+  (req, res, next) => {
+    try {
+      const { error } = updateContactSchema.validate(req.body);
+      if (error) {
+        return res.status(400).json({
+          status: 400,
+          message: 'BadRequestError',
+          data: { message: error.details[0].message },
+        });
+      }
+      next();
+    } catch (err) {
+      next(err);
+    }
+  },
   ctrlWrapper(patchContactController),
 );
 
