@@ -1,20 +1,81 @@
-type: object
-required:
-  - _id
-  - name
-  - email
-  - phone
-properties:
-  _id:
-    type: string
-    example: '60d21b4667d0d8992e610c85'
-  name:
-    type: string
-    example: 'John Doe'
-  email:
-    type: string
-    format: email
-    example: 'john@example.com'
-  phone:
-    type: string
-    example: '+380991234567'
+ContactRequest:
+  type: object
+  properties:
+    name:
+      type: string
+      example: 'John Doe'
+    phoneNumber:
+      type: string
+      example: '+380931234567'
+    contactType:
+      type: string
+      enum: [personal, work, family, other]
+      example: 'personal'
+    gender:
+      type: string
+      enum: [male, female, other]
+      example: 'male'
+    age:
+      type: integer
+      example: 30
+    favorite:
+      type: boolean
+      example: false
+    photo:
+      type: string
+      format: binary
+  required:
+    - name
+    - phoneNumber
+    - contactType
+  additionalProperties: false
+
+ContactResponse:
+  type: object
+  properties:
+    _id:
+      type: string
+      example: '665f6aeb82c2ef76c3cc6039'
+    name:
+      type: string
+      example: 'John Doe'
+    phoneNumber:
+      type: string
+      example: '+380931234567'
+    contactType:
+      type: string
+      enum: [personal, work, family, other]
+      example: 'personal'
+    gender:
+      type: string
+      enum: [male, female, other]
+      example: 'male'
+    age:
+      type: integer
+      example: 30
+    favorite:
+      type: boolean
+      example: false
+    photo:
+      type: string
+      format: uri
+      example: 'https://res.cloudinary.com/demo/image/upload/v1621234567/photo.jpg'
+    owner:
+      type: string
+      example: '665f6aeb82c2ef76c3cc6031'
+    createdAt:
+      type: string
+      format: date-time
+      example: '2024-06-04T12:34:56.789Z'
+    updatedAt:
+      type: string
+      format: date-time
+      example: '2024-06-05T08:20:33.123Z'
+  required:
+    - _id
+    - name
+    - phoneNumber
+    - contactType
+    - owner
+    - createdAt
+    - updatedAt

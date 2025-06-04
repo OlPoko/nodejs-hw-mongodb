@@ -9,28 +9,18 @@ parameters:
   - in: path
     name: contactId
     required: true
-    description: Унікальний ідентифікатор контакту, який потрібно видалити
+    description: Унікальний ідентифікатор контакту
     schema:
       type: string
       example: '60d21b4667d0d8992e610c85'
 responses:
-  '200':
-    description: Контакт успішно видалено
-    content:
-      application/json:
-        schema:
-          type: object
-          required:
-            - status
-            - message
-          properties:
-            status:
-              type: integer
-              example: 200
-            message:
-              type: string
-              example: Contact successfully deleted!
+  '204':
+    description: Контакт успішно видалено (без тіла відповіді)
+  '400':
+    description: Невірний формат contactId
   '401':
     $ref: '../../../components/responses/401.yaml'
   '404':
     description: Контакт не знайдено
+  '500':
+    $ref: '../../../components/responses/500.yaml'
