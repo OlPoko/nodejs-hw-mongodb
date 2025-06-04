@@ -2,62 +2,35 @@ tags:
   - Contacts
 summary: Update a contact by id
 operationId: updateContact
-description: Оновлює інформацію про існуючий контакт за його ідентифікатором.
+description: Оновлює інформацію про існуючий контакт за його ID.
 security:
   - bearerAuth: []
 parameters:
   - in: path
     name: contactId
     required: true
-    description: Унікальний ідентифікатор контакту, який потрібно оновити
+    description: Унікальний ідентифікатор контакту
     schema:
       type: string
       example: '60d21b4667d0d8992e610c85'
 requestBody:
   required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
-        type: object
-        properties:
-          name:
-            type: string
-            example: 'Updated Name'
-          email:
-            type: string
-            format: email
-            example: 'updated@example.com'
-          phone:
-            type: string
-            example: '+380991234567'
-          favorite:
-            type: boolean
-            example: true
-        additionalProperties: false
+        $ref: '../../../components/schemas/contact.yaml#/ContactRequest'
 responses:
   '200':
     description: Контакт успішно оновлено
     content:
       application/json:
         schema:
-          type: object
-          required:
-            - status
-            - message
-            - data
-          properties:
-            status:
-              type: integer
-              example: 200
-            message:
-              type: string
-              example: Contact successfully updated!
-            data:
-              type: object
-              $ref: '../../../components/schemas/contact.yaml'
+          $ref: '../../../components/schemas/contact.yaml#/ContactResponse'
   '400':
-    description: Невірні дані для оновлення
+    description: Невірні дані або некоректний contactId
   '401':
     $ref: '../../../components/responses/401.yaml'
   '404':
     description: Контакт не знайдено
+  '500':
+    $ref: '../../../components/responses/500.yaml'

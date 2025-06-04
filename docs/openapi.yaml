@@ -15,10 +15,10 @@ tags:
     description: Auth operations.
 
 servers:
-  - url: http://localhost:3000
-    description: Local server
-  - url: https://example.com/api/v1
+  - url: https://nodejs-hw-mongodb-k6jr.onrender.com/api
     description: Production server
+  - url: http://localhost:3000/api
+    description: Local development server
 
 paths:
   /contacts:
