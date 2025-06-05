@@ -27,10 +27,10 @@ responses:
         schema:
           $ref: '../../../components/schemas/contact.yaml#/ContactResponse'
   '400':
-    description: Невірні дані або некоректний contactId
+    $ref: '../../../components/responses/400.yaml'
   '401':
     $ref: '../../../components/responses/401.yaml'
   '404':
-    description: Контакт не знайдено
+    $ref: '../../../components/responses/404.yaml'
   '500':
     $ref: '../../../components/responses/500.yaml'

@@ -17,12 +17,25 @@ responses:
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/contact.yaml#/ContactResponse'
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Contact created successfully
+            data:
+              $ref: '../../components/schemas/contact.yaml#/ContactResponse'
   '400':
-    description: Невірні дані для створення контакту
+    $ref: '../../components/responses/400.yaml'
   '401':
     $ref: '../../components/responses/401.yaml'
-  '409':
-    description: Контакт із таким номером уже існує
+  '404':
+    $ref: '../../components/responses/404.yaml'
   '500':
     $ref: '../../components/responses/500.yaml'

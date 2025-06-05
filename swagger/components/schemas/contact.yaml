@@ -3,30 +3,26 @@ ContactRequest:
   properties:
     name:
       type: string
-      example: 'John Doe'
+      example: 'Andriy Pavlenko'
     phoneNumber:
       type: string
-      example: '+380931234567'
+      example: '+380000000003'
+    email:
+      type: string
+      format: email
+      example: 'dmytro3@example.com'
     contactType:
       type: string
-      enum: [personal, work, family, other]
-      example: 'personal'
-    gender:
-      type: string
-      enum: [male, female, other]
-      example: 'male'
-    age:
-      type: integer
-      example: 30
-    favorite:
-      type: boolean
-      example: false
+      enum: [personal, work, family, other, home]
+      example: 'home'
     photo:
       type: string
       format: binary
+      description: 'Contact photo upload'
   required:
     - name
     - phoneNumber
+    - email
     - contactType
   additionalProperties: false
 
@@ -35,47 +31,42 @@ ContactResponse:
   properties:
     _id:
       type: string
-      example: '665f6aeb82c2ef76c3cc6039'
+      example: '6818d350afed062c6892fe2c'
     name:
       type: string
-      example: 'John Doe'
+      example: 'Andriy Pavlenko'
     phoneNumber:
       type: string
-      example: '+380931234567'
-    contactType:
+      example: '+380000000003'
+    email:
       type: string
-      enum: [personal, work, family, other]
-      example: 'personal'
-    gender:
-      type: string
-      enum: [male, female, other]
-      example: 'male'
-    age:
-      type: integer
-      example: 30
-    favorite:
+      format: email
+      example: 'dmytro3@example.com'
+    isFavourite:
       type: boolean
       example: false
+    contactType:
+      type: string
+      enum: [personal, work, family, other, home]
+      example: 'home'
     photo:
       type: string
       format: uri
       example: 'https://res.cloudinary.com/demo/image/upload/v1621234567/photo.jpg'
-    owner:
-      type: string
-      example: '665f6aeb82c2ef76c3cc6031'
     createdAt:
       type: string
       format: date-time
-      example: '2024-06-04T12:34:56.789Z'
+      example: '2024-05-08T16:12:14.954168'
     updatedAt:
       type: string
       format: date-time
-      example: '2024-06-05T08:20:33.123Z'
+      example: '2024-05-08T16:12:14.954170'
   required:
     - _id
     - name
     - phoneNumber
+    - email
+    - isFavourite
     - contactType
-    - owner
     - createdAt
     - updatedAt

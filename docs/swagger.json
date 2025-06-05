@@ -45,41 +45,7 @@
         ],
         "parameters": [
           {
-            "name": "gender",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "male",
-                "female",
-                "other"
-              ]
-            },
-            "description": "Фільтрація за статтю"
-          },
-          {
-            "name": "minAge",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0
-            },
-            "description": "Фільтрація за мінімальним віком"
-          },
-          {
-            "name": "maxAge",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0
-            },
-            "description": "Фільтрація за максимальним віком"
-          },
-          {
-            "name": "favorite",
+            "name": "isFavourite",
             "in": "query",
             "required": false,
             "schema": {
@@ -119,9 +85,7 @@
                 "email",
                 "phoneNumber",
                 "contactType",
-                "gender",
-                "age",
-                "favorite",
+                "isFavourite",
                 "createdAt",
                 "updatedAt"
               ]
@@ -210,19 +174,37 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ContactResponse"
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Contact created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ContactResponse"
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "description": "Невірні дані для створення контакту"
+            "$ref": "#/components/responses/400"
           },
           "401": {
             "$ref": "#/components/responses/401"
           },
-          "409": {
-            "description": "Контакт із таким номером уже існує"
+          "404": {
+            "$ref": "#/components/responses/404"
           },
           "500": {
             "$ref": "#/components/responses/500"
@@ -285,13 +267,13 @@
             }
           },
           "400": {
-            "description": "Невірний формат або некоректний contactId"
+            "$ref": "#/components/responses/400"
           },
           "401": {
             "$ref": "#/components/responses/401"
           },
           "404": {
-            "description": "Контакт не знайдено"
+            "$ref": "#/components/responses/404"
           },
           "500": {
             "$ref": "#/components/responses/500"
@@ -344,13 +326,13 @@
             }
           },
           "400": {
-            "description": "Невірні дані або некоректний contactId"
+            "$ref": "#/components/responses/400"
           },
           "401": {
             "$ref": "#/components/responses/401"
           },
           "404": {
-            "description": "Контакт не знайдено"
+            "$ref": "#/components/responses/404"
           },
           "500": {
             "$ref": "#/components/responses/500"
@@ -386,13 +368,13 @@
             "description": "Контакт успішно видалено (без тіла відповіді)"
           },
           "400": {
-            "description": "Невірний формат contactId"
+            "$ref": "#/components/responses/400"
           },
           "401": {
             "$ref": "#/components/responses/401"
           },
           "404": {
-            "description": "Контакт не знайдено"
+            "$ref": "#/components/responses/404"
           },
           "500": {
             "$ref": "#/components/responses/500"
@@ -414,15 +396,24 @@
         "properties": {
           "_id": {
             "type": "string",
-            "example": "665f6aeb82c2ef76c3cc6039"
+            "example": "6818d350afed062c6892fe2c"
           },
           "name": {
             "type": "string",
-            "example": "John Doe"
+            "example": "Andriy Pavlenko"
           },
           "phoneNumber": {
             "type": "string",
-            "example": "+380931234567"
+            "example": "+380000000003"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "dmytro3@example.com"
+          },
+          "isFavourite": {
+            "type": "boolean",
+            "example": false
           },
           "contactType": {
             "type": "string",
@@ -430,53 +421,34 @@
               "personal",
               "work",
               "family",
-              "other"
+              "other",
+              "home"
             ],
-            "example": "personal"
-          },
-          "gender": {
-            "type": "string",
-            "enum": [
-              "male",
-              "female",
-              "other"
-            ],
-            "example": "male"
-          },
-          "age": {
-            "type": "integer",
-            "example": 30
-          },
-          "favorite": {
-            "type": "boolean",
-            "example": false
+            "example": "home"
           },
           "photo": {
             "type": "string",
             "format": "uri",
             "example": "https://res.cloudinary.com/demo/image/upload/v1621234567/photo.jpg"
           },
-          "owner": {
-            "type": "string",
-            "example": "665f6aeb82c2ef76c3cc6031"
-          },
           "createdAt": {
             "type": "string",
             "format": "date-time",
-            "example": "2024-06-04T12:34:56.789Z"
+            "example": "2024-05-08T16:12:14.954168"
           },
           "updatedAt": {
             "type": "string",
             "format": "date-time",
-            "example": "2024-06-05T08:20:33.123Z"
+            "example": "2024-05-08T16:12:14.954170"
           }
         },
         "required": [
           "_id",
           "name",
           "phoneNumber",
+          "email",
+          "isFavourite",
           "contactType",
-          "owner",
           "createdAt",
           "updatedAt"
         ]
@@ -486,11 +458,16 @@
         "properties": {
           "name": {
             "type": "string",
-            "example": "John Doe"
+            "example": "Andriy Pavlenko"
           },
           "phoneNumber": {
             "type": "string",
-            "example": "+380931234567"
+            "example": "+380000000003"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "dmytro3@example.com"
           },
           "contactType": {
             "type": "string",
@@ -498,41 +475,55 @@
               "personal",
               "work",
               "family",
-              "other"
+              "other",
+              "home"
             ],
-            "example": "personal"
-          },
-          "gender": {
-            "type": "string",
-            "enum": [
-              "male",
-              "female",
-              "other"
-            ],
-            "example": "male"
-          },
-          "age": {
-            "type": "integer",
-            "example": 30
-          },
-          "favorite": {
-            "type": "boolean",
-            "example": false
+            "example": "home"
           },
           "photo": {
             "type": "string",
-            "format": "binary"
+            "format": "binary",
+            "description": "Contact photo upload"
           }
         },
         "required": [
           "name",
           "phoneNumber",
+          "email",
           "contactType"
         ],
         "additionalProperties": false
       }
     },
     "responses": {
+      "400": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 400
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Invalid request data"
+                },
+                "data": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        }
+      },
       "401": {
         "description": "Unauthorized",
         "content": {
@@ -541,7 +532,8 @@
               "type": "object",
               "required": [
                 "status",
-                "message"
+                "message",
+                "data"
               ],
               "properties": {
                 "status": {
@@ -550,7 +542,38 @@
                 },
                 "message": {
                   "type": "string",
-                  "example": "UnauthorizedError"
+                  "example": "Authentication failed or token missing"
+                },
+                "data": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Resource not found"
+                },
+                "data": {
+                  "type": "null"
                 }
               }
             }
@@ -558,14 +581,15 @@
         }
       },
       "500": {
-        "description": "Internal server error",
+        "description": "Internal Server Error",
         "content": {
           "application/json": {
             "schema": {
               "type": "object",
               "required": [
                 "status",
-                "message"
+                "message",
+                "data"
               ],
               "properties": {
                 "status": {
@@ -574,7 +598,10 @@
                 },
                 "message": {
                   "type": "string",
-                  "example": "Internal Server Error"
+                  "example": "Server error occurred"
+                },
+                "data": {
+                  "type": "null"
                 }
               }
             }

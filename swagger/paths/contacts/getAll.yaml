@@ -6,28 +6,7 @@ description: Повертає список контактів користува
 security:
   - bearerAuth: []
 parameters:
-  - name: gender
-    in: query
-    required: false
-    schema:
-      type: string
-      enum: [male, female, other]
-    description: Фільтрація за статтю
-  - name: minAge
-    in: query
-    required: false
-    schema:
-      type: integer
-      minimum: 0
-    description: Фільтрація за мінімальним віком
-  - name: maxAge
-    in: query
-    required: false
-    schema:
-      type: integer
-      minimum: 0
-    description: Фільтрація за максимальним віком
-  - name: favorite
+  - name: isFavourite
     in: query
     required: false
     schema:
@@ -59,9 +38,7 @@ parameters:
           email,
           phoneNumber,
           contactType,
-          gender,
-          age,
-          favorite,
+          isFavourite,
           createdAt,
           updatedAt,
         ]
