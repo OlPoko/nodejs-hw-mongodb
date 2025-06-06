@@ -15,6 +15,9 @@ ContactRequest:
       type: string
       enum: [personal, work, family, other, home]
       example: 'home'
+    isFavourite:
+      type: boolean
+      example: false
     photo:
       type: string
       format: binary
@@ -22,8 +25,33 @@ ContactRequest:
   required:
     - name
     - phoneNumber
-    - email
     - contactType
+  additionalProperties: false
+
+ContactUpdateRequest:
+  type: object
+  properties:
+    name:
+      type: string
+      example: 'Andriy Pavlenko'
+    phoneNumber:
+      type: string
+      example: '+380000000003'
+    email:
+      type: string
+      format: email
+      example: 'dmytro3@example.com'
+    contactType:
+      type: string
+      enum: [personal, work, family, other, home]
+      example: 'home'
+    isFavourite:
+      type: boolean
+      example: true
+    photo:
+      type: string
+      format: binary
+      description: 'Contact photo upload'
   additionalProperties: false
 
 ContactResponse:
